@@ -95,7 +95,10 @@ class StorySubmitter(object):
             cursor.execute('SELECT * FROM stories WHERE time < NOW() - INTERVAL %s;',
                            (self._hold_time, ))
             num = 0
-            for _ in cursor:
+            for story_ident, submission_time in cursor:
+                if num == 0:
+                    story = Story(story_ident)
+                    LOG.debug('{} | {}'.format(datetime.now(timezone.utc) - submission_time, story.title))
                 num += 1
             LOG.debug('{} stories to submit'.format(num))
 
