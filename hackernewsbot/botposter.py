@@ -19,11 +19,11 @@ class StoryPoster(object):
             cursor.execute('SELECT * FROM stories WHERE time < NOW() - INTERVAL %s;',
                            (self._hold_time, ))
             stories = cursor.fetchall()
-            logging.debug('{} stories to post'.format(len(stories)))
+            print('{} stories to post'.format(len(stories)))
             if len(stories) > 20:
                 for story_ident, submission_time in stories[-20:]:
                     story = Story(story_ident)
                     if story.deleted or story.dead:
                         continue
                     age = datetime.now(timezone.utc) - submission_time
-                    logging.debug('Last one: {} | {} {} | {}'.format(age, len(story.comments), story.score, story.title))
+                    print('Last one: {} | {} {} | {}'.format(age, len(story.comments), story.score, story.title))
