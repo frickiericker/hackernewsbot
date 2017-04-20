@@ -48,19 +48,21 @@ class StoryCollector(object):
 
     async def run(self, sleep):
         while True:
-            self.collect_new_stories()
-            await asyncio.sleep(sleep)
-
-    def collect_new_stories(self):
-        for story_ident in query_new_story_idents():
             try:
-                self._insert_story_if_not_exists(story_ident)
+                await self.collect_new_stories()
             except Exception as e:
                 LOG.error('error: (story {}) {}'.format(story_ident, e))
+            await asyncio.sleep(sleep)
 
-    def _insert_story_if_not_exists(self, story_ident):
+    async def collect_new_stories(self):
+        LOG.debug('collecting new stories')
+        for story_ident in query_new_story_idents():
+            await self._insert_story_if_not_exists(story_ident)
+
+    async def _insert_story_if_not_exists(self, story_ident):
         if self._has_story(story_ident):
             return
+        LOG.debug('inserting {}'.format(story_ident))
         self._insert_story(story_ident)
 
     def _insert_story(self, story_ident):
@@ -83,10 +85,10 @@ class StorySubmitter(object):
 
     async def run(self, sleep):
         while True:
-            self.submit_stories()
+            await self.submit_stories()
             await asyncio.sleep(sleep)
 
-    def submit_stories(self):
+    async def submit_stories(self):
         with self._database.cursor() as cursor:
             cursor.execute('SELECT * FROM stories WHERE time < NOW() - INTERVAL %s',
                            (self._hold_time, ))
