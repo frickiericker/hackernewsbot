@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 import json
 import logging
 import os
-import urllib.parse as urlparse
+from urllib.parse import urlparse
 
 import psycopg2
 import requests
@@ -22,7 +22,7 @@ def main():
         story_database.close()
 
 def connect_to_story_database():
-    url = urlparse.urlparse(DATABASE_URL)
+    url = urlparse(DATABASE_URL)
     connection = psycopg2.connect(
         database=url.path[1:],
         user=url.username,
