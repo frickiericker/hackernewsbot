@@ -22,7 +22,7 @@ def main():
         loop = asyncio.get_event_loop()
         tasks = asyncio.gather(
             make_collector(story_database).run(COLLECTOR_SLEEP),
-            make_submitter(story_database).run(COLLECTOR_SLEEP)
+            make_submitter(story_database).run(SUBMITTER_SLEEP)
         )
         loop.run_until_complete(tasks)
 
