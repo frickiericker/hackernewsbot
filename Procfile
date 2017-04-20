@@ -1,2 +1,2 @@
-web: python statuspage.py
-bot: python hackernewsbot.py
+web: python web.py
+bot: python bot.py

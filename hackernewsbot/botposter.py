@@ -1,7 +1,7 @@
 import asyncio
 from datetime import datetime, timezone
 
-from hackernewsbot import LOG
+from bot import LOG
 from hackernewsbot.hackernews import Story
 
 class StoryPoster(object):
