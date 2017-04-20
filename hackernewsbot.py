@@ -99,7 +99,7 @@ class StoryPoster(object):
                 story_ident, submission_time = stories[-1]
                 story = Story(story_ident)
                 age = datetime.now(timezone.utc) - submission_time
-                LOG.debug('Last one: {} | {}'.format(ag, story.title))
+                LOG.debug('Last one: {} | {}'.format(age, story.title))
 
 class Story(object):
     def __init__(self, ident):
