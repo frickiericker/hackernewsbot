@@ -11,7 +11,7 @@ import requests
 DATABASE_URL = os.environ.get('DATABASE_URL', None)
 COLLECTOR_SLEEP = os.environ.get('COLLECTOR_SLEEP', 300)
 SUBMITTER_SLEEP = os.environ.get('SUBMITTER_SLEEP', 10)
-SUBMISSION_HOLD_TIME = os.environ.get('SUBMISSION_HOLD_TIME', '30 min')
+SUBMISSION_HOLD_TIME = os.environ.get('SUBMISSION_HOLD_TIME', '30 minutes')
 
 LOG = logging.getLogger(__name__)
 LOG.setLevel(logging.DEBUG)
