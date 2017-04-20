@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 import json
 import requests
 
@@ -20,7 +20,10 @@ class Story(object):
 
     def _set_properties(self, time=None, deleted=False, dead=False, kids=[],
                         score=None, title=None, **others):
-        self._time = time
+        if time:
+            self._time = datetime.fromtimestamp(time, timezone.utc)
+        else:
+            self._time = None
         self._deleted = deleted
         self._dead = dead
         self._comments = kids
