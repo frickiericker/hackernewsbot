@@ -16,15 +16,16 @@ def query_new_story_idents():
 class Story(object):
     def __init__(self, ident):
         self._ident = ident
-        self._init_with_api_response(query_story(ident))
+        self._set_properties(**query_story(ident))
 
-    def _init_with_api_response(self, response):
-        self._time = datetime.fromtimestamp(response['time'], timezone.utc)
-        self._deleted = response.get('deleted', False)
-        self._dead = response.get('dead', False)
-        self._comments = response.get('kids', [])
-        self._score = response.get('score', None)
-        self._title = response.get('title', None)
+    def _set_properties(self, time=None, deleted=False, dead=False, kids=[],
+                        score=None, title=None, **others):
+        self._time = time
+        self._deleted = deleted
+        self._dead = dead
+        self._comments = kids
+        self._score = score
+        self._title = title
 
     @property
     def ident(self):
