@@ -14,6 +14,7 @@ SUBMITTER_SLEEP = os.environ.get('SUBMITTER_SLEEP', 10)
 SUBMISSION_HOLD_TIME = os.environ.get('SUBMISSION_HOLD_TIME', '30 minutes')
 
 LOG = logging.getLogger(__name__)
+LOG.addHandler(logging.StreamHandler())
 LOG.setLevel(logging.DEBUG)
 
 def main():
