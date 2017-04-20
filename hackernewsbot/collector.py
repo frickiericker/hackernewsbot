@@ -1,7 +1,6 @@
 import asyncio
 import logging
 
-from bot import LOG
 from hackernewsbot.hackernews import Story
 
 class StoryCollector(object):
