@@ -12,7 +12,7 @@ class StoryCollector(object):
             try:
                 await self.collect_new_stories()
             except Exception as e:
-                print('error: {}'.format(e))
+                logging.debug('error: {}'.format(e))
             await asyncio.sleep(sleep)
 
     async def collect_new_stories(self):
@@ -23,7 +23,7 @@ class StoryCollector(object):
     async def _insert_story_if_not_exists(self, story_ident):
         if self._has_story(story_ident):
             return
-        print('inserting {}'.format(story_ident))
+        logging.debug('inserting {}'.format(story_ident))
         self._insert_story(story_ident)
 
     def _insert_story(self, story_ident):

@@ -16,6 +16,7 @@ class StoryPoster(object):
 
     async def post_stories(self):
         for story_ident in self._query_feasible_stories():
+            logging.debug('posting {}'.format(story_ident))
             self._mark_story_processed(story_ident)
 
     def _query_feasible_stories(self):
