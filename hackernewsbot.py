@@ -20,15 +20,15 @@ def main():
     with connect_to_database(DATABASE_URL) as story_database:
         loop = asyncio.get_event_loop()
         tasks = asyncio.gather(
-            make_collector().run(COLLECTOR_SLEEP),
-            make_submitter().run(COLLECTOR_SLEEP)
+            make_collector(story_database).run(COLLECTOR_SLEEP),
+            make_submitter(story_database).run(COLLECTOR_SLEEP)
         )
         loop.run_until_complete(tasks)
 
-def make_collector():
+def make_collector(story_database):
     return StoryCollector(story_database)
 
-def make_submitter():
+def make_submitter(story_database):
     return StorySubmitter(story_database, SUBMISSION_HOLD_TIME)
 
 def connect_to_database(uri):
