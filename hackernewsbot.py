@@ -10,8 +10,8 @@ import requests
 
 DATABASE_URL = os.environ.get('DATABASE_URL', None)
 COLLECTOR_SLEEP = os.environ.get('COLLECTOR_SLEEP', 300)
-SUBMITTER_SLEEP = os.environ.get('SUBMITTER_SLEEP', 10)
-SUBMISSION_HOLD_TIME = os.environ.get('SUBMISSION_HOLD_TIME', 30) # minutes
+BOTPOSTER_SLEEP = os.environ.get('BOTPOSTER_SLEEP', 10)
+BOTPOST_HOLD_TIME = os.environ.get('BOTPOST_HOLD_TIME', 30) # minutes
 
 LOG = logging.getLogger(__name__)
 LOG.addHandler(logging.StreamHandler())
@@ -22,16 +22,15 @@ def main():
         loop = asyncio.get_event_loop()
         tasks = asyncio.gather(
             make_collector(story_database).run(COLLECTOR_SLEEP),
-            make_submitter(story_database).run(SUBMITTER_SLEEP)
+            make_botposter(story_database).run(BOTPOSTER_SLEEP)
         )
         loop.run_until_complete(tasks)
 
 def make_collector(story_database):
     return StoryCollector(story_database)
 
-def make_submitter(story_database):
-    return StorySubmitter(story_database,
-                          timedelta(minutes=SUBMISSION_HOLD_TIME))
+def make_botposter(story_database):
+    return StoryPoster(story_database, timedelta(minutes=BOTPOST_HOLD_TIME))
 
 def connect_to_database(uri):
     uri = urlparse(uri)
@@ -80,17 +79,17 @@ class StoryCollector(object):
                            (story_ident, ))
             return cursor.rowcount != 0
 
-class StorySubmitter(object):
+class StoryPoster(object):
     def __init__(self, database, hold_time):
         self._database = database
         self._hold_time = hold_time
 
     async def run(self, sleep):
         while True:
-            await self.submit_stories()
+            await self.post_stories()
             await asyncio.sleep(sleep)
 
-    async def submit_stories(self):
+    async def post_stories(self):
         with self._database.cursor() as cursor:
             cursor.execute('SELECT * FROM stories WHERE time < NOW() - INTERVAL %s;',
                            (self._hold_time, ))
@@ -100,7 +99,7 @@ class StorySubmitter(object):
                     story = Story(story_ident)
                     LOG.debug('{} | {}'.format(datetime.now(timezone.utc) - submission_time, story.title))
                 num += 1
-            LOG.debug('{} stories to submit'.format(num))
+            LOG.debug('{} stories to post'.format(num))
 
 class Story(object):
     def __init__(self, ident):
