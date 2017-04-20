@@ -43,9 +43,8 @@ def connect_to_database(uri):
     return connection
 
 class StoryCollector(object):
-    def __init__(self, database, logger):
+    def __init__(self, database):
         self._database = database
-        self._logger = logger
 
     async def run(self, sleep):
         while True:
