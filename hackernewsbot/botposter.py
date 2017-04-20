@@ -22,7 +22,8 @@ class StoryPoster(object):
     def _query_feasible_stories(self):
         with self._database.cursor() as cursor:
             cursor.execute(('SELECT stories.id FROM stories, processingStatus ' +
-                            'WHERE stories.time < NOW() - INTERVAL %s ' +
+                            'WHERE stories.id = processingStatus.id ' +
+                            'AND stories.time < NOW() - INTERVAL %s ' +
                             'AND NOT processingStatus.processed;'),
                            (self._hold_time, ))
             return [story_ident for story_ident, in cursor]
