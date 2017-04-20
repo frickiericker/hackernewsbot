@@ -98,6 +98,8 @@ class StoryPoster(object):
             if len(stories) > 20:
                 for story_ident, submission_time in stories[-20:]:
                     story = Story(story_ident)
+                    if story.deleted or story.dead:
+                        continue
                     age = datetime.now(timezone.utc) - submission_time
                     LOG.debug('Last one: {} | {} {} | {}'.format(age, len(story.comments), story.score, story.title))
 
@@ -108,6 +110,8 @@ class Story(object):
 
     def _init_with_api_response(self, response):
         self._time = datetime.fromtimestamp(response['time'], timezone.utc)
+        self._deleted = response.get('deleted', False)
+        self._dead = response.get('dead', False)
         self._comments = response.get('kids', [])
         self._score = response.get('score', None)
         self._title = response.get('title', None)
@@ -119,6 +123,14 @@ class Story(object):
     @property
     def time(self):
         return self._time
+
+    @property
+    def deleted(self):
+        return self._deleted
+
+    @property
+    def dead(self):
+        return self._dead
 
     @property
     def comments(self):
