@@ -6,19 +6,17 @@ from hackernewsbot.hackernews import Story, query_new_story_idents
 class StoryCollector(object):
     def __init__(self, database):
         self._database = database
+        self._query_delay = 0.5
 
     async def run(self, sleep):
         while True:
-            try:
-                await self.collect_new_stories()
-            except Exception as e:
-                logging.debug('error: {}'.format(e))
+            await self.collect_new_stories()
             await asyncio.sleep(sleep)
 
     async def collect_new_stories(self):
-        logging.debug('collecting new stories')
-        for story_ident in reversed(list(query_new_story_idents())):
+        for story_ident in reversed(query_new_story_idents()):
             await self._insert_story_if_not_exists(story_ident)
+            await asyncio.sleep(self._query_delay)
 
     async def _insert_story_if_not_exists(self, story_ident):
         if self._has_story(story_ident):
@@ -39,4 +37,4 @@ class StoryCollector(object):
         with self._database.cursor() as cursor:
             cursor.execute('SELECT * FROM stories WHERE id = %s;',
                            (story_ident, ))
-            return cursor.rowcount != 0
+            return cursor.fetchone() is not None

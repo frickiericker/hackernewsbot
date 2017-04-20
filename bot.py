@@ -12,7 +12,7 @@ from hackernewsbot.dbcleaner import DatabaseCleaner
 DATABASE_URL = os.environ.get('DATABASE_URL', None)
 COLLECTOR_SLEEP = int(os.environ.get('COLLECTOR_SLEEP', 300))
 BOTPOSTER_SLEEP = int(os.environ.get('BOTPOSTER_SLEEP', 10))
-DBCLEANER_SLEEP = int(os.environ.get('DBCLEANER_SLEEP', 500))
+DBCLEANER_SLEEP = int(os.environ.get('DBCLEANER_SLEEP', 600))
 STORY_WARMUP = int(os.environ.get('STORY_WARMUP', 60 * 60))
 STORIES_TO_KEEP = int(os.environ.get('STORIES_TO_KEEP', 1000))
 
