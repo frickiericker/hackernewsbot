@@ -24,6 +24,7 @@ class Story(object):
         story = Story()
         story._ident = ident
         story._set_properties(**await query_story(ident))
+        return story
 
     def _set_properties(self, time=None, deleted=False, dead=False, kids=[],
                         score=None, title=None, **others):
