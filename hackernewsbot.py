@@ -4,7 +4,7 @@ import json
 import os
 import urllib.parse as urlparse
 
-#import psycopg2
+import psycopg2
 import requests
 
 import signal
