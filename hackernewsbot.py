@@ -11,7 +11,7 @@ import requests
 DATABASE_URL = os.environ.get('DATABASE_URL', None)
 COLLECTOR_SLEEP = os.environ.get('COLLECTOR_SLEEP', 300)
 BOTPOSTER_SLEEP = os.environ.get('BOTPOSTER_SLEEP', 10)
-BOTPOST_HOLD_TIME = os.environ.get('BOTPOST_HOLD_TIME', 30) # minutes
+BOTPOST_HOLD_TIME = os.environ.get('BOTPOST_HOLD_TIME', 60) # minutes
 
 LOG = logging.getLogger(__name__)
 LOG.addHandler(logging.StreamHandler())
