@@ -8,9 +8,6 @@ from urllib.parse import urlparse
 import psycopg2
 import requests
 
-import signal
-signal.signal(signal.SIGINT, signal.SIG_DFL)
-
 DATABASE_URL = os.environ.get('DATABASE_URL', None)
 LOG = logging.getLogger(__name__)
 
