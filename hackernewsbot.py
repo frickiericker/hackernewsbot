@@ -93,13 +93,13 @@ class StoryPoster(object):
         with self._database.cursor() as cursor:
             cursor.execute('SELECT * FROM stories WHERE time < NOW() - INTERVAL %s;',
                            (self._hold_time, ))
-            num = 0
-            for story_ident, submission_time in cursor:
-                if num == 0:
-                    story = Story(story_ident)
-                    LOG.debug('{} | {}'.format(datetime.now(timezone.utc) - submission_time, story.title))
-                num += 1
-            LOG.debug('{} stories to post'.format(num))
+            stories = cursor.fetchall()
+            LOG.debug('{} stories to post'.format(len(stories)))
+            if stories:
+                story_ident, submission_time = stories[-1]
+                story = Story(story_ident)
+                age = datetime.now(timezone.utc) - submission_time
+                LOG.debug('Last one: {} | {}'.format(ag, story.title))
 
 class Story(object):
     def __init__(self, ident):
