@@ -1,5 +1,5 @@
 import asyncio
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import json
 import logging
 import os
@@ -31,7 +31,7 @@ def make_collector(story_database):
 
 def make_submitter(story_database):
     return StorySubmitter(story_database,
-                          datetime.timedelta(minutes=SUBMISSION_HOLD_TIME))
+                          timedelta(minutes=SUBMISSION_HOLD_TIME))
 
 def connect_to_database(uri):
     uri = urlparse(uri)
