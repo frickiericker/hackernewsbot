@@ -12,6 +12,6 @@ class DatabaseCleaner(object):
 
     async def prune_stale_stories(self):
         with self._database.cursor() as cursor:
-            cursor.execute('DELETE * FROM stories WHERE time < NOW() - INTERVAL %s;',
+            cursor.execute('DELETE FROM stories WHERE time < NOW() - INTERVAL %s;',
                            (self._time_to_live, ))
         self._database.commit()
