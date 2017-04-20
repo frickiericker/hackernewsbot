@@ -71,7 +71,7 @@ class StoryCollector(object):
         self._database.commit()
 
     def _has_story(self, story_ident):
-        with story_database.cursor() as cursor:
+        with self._database.cursor() as cursor:
             cursor.execute('SELECT * FROM stories WHERE id = %s',
                            (story_ident, ))
             return cursor.rowcount != 0
