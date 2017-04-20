@@ -92,8 +92,7 @@ class StorySubmitter(object):
 
     async def submit_stories(self):
         with self._database.cursor() as cursor:
-            cursor.execute('SELECT * FROM stories WHERE time < NOW() - INTERVAL %s;',
-                           (self._hold_time, ))
+            cursor.execute("SELECT * FROM stories WHERE time < NOW() - INTERVAL '30 minutes';")
             LOG.debug('{} stories to submit'.format(cursor.rownumber))
 
 class Story(object):
