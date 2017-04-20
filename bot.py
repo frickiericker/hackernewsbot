@@ -13,11 +13,8 @@ COLLECTOR_SLEEP = int(os.environ.get('COLLECTOR_SLEEP', 300))
 BOTPOSTER_SLEEP = int(os.environ.get('BOTPOSTER_SLEEP', 10))
 BOTPOST_HOLD_TIME = int(os.environ.get('BOTPOST_HOLD_TIME', 60)) # minutes
 
-LOG = logging.getLogger(__name__)
-LOG.addHandler(logging.StreamHandler())
-LOG.setLevel(logging.DEBUG)
-
 def main():
+    logging.getLogger().setLevel('debug')
     with connect_to_database(DATABASE_URL) as story_database:
         loop = asyncio.get_event_loop()
         tasks = asyncio.gather(

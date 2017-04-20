@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 from bot import LOG
 from hackernewsbot.hackernews import Story
@@ -12,18 +13,18 @@ class StoryCollector(object):
             try:
                 await self.collect_new_stories()
             except Exception as e:
-                LOG.error('error: (story {}) {}'.format(story_ident, e))
+                logging.error('error: (story {}) {}'.format(story_ident, e))
             await asyncio.sleep(sleep)
 
     async def collect_new_stories(self):
-        LOG.debug('collecting new stories')
+        logging.debug('collecting new stories')
         for story_ident in query_new_story_idents():
             await self._insert_story_if_not_exists(story_ident)
 
     async def _insert_story_if_not_exists(self, story_ident):
         if self._has_story(story_ident):
             return
-        LOG.debug('inserting {}'.format(story_ident))
+        logging.debug('inserting {}'.format(story_ident))
         self._insert_story(story_ident)
 
     def _insert_story(self, story_ident):
