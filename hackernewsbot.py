@@ -1,6 +1,7 @@
 import asyncio
 from datetime import datetime, timezone
 import json
+import logging
 import os
 import urllib.parse as urlparse
 
@@ -11,6 +12,7 @@ import signal
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 DATABASE_URL = os.environ.get('DATABASE_URL', None)
+LOG = logging.getLogger(__name__)
 
 def main():
     story_database = connect_to_story_database()
@@ -33,13 +35,21 @@ def connect_to_story_database():
 def run(story_database):
     cursor = story_database.cursor()
     for story_ident in query_new_story_idents():
-        cursor.execute('SELECT * FROM stories WHERE id = %s',
-                       (story_ident, ))
-        if cursor.rowcount == 0:
-            story = Story(story_ident)
-            cursor.execute('INSERT INTO stories (id, time) VALUES (%s, %s)',
-                           (story.ident, story.time))
+        try:
+            register_story_if_not_exists(cursor, story_ident)
+        except Exception as e:
+            LOG.error('error: (story {}) {}'.format(story_ident, e))
     cursor.close()
+    story_database.commit()
+
+def register_story_if_not_exists(cursor, story_ident):
+    cursor.execute('SELECT * FROM stories WHERE id = %s',
+                   (story_ident, ))
+    if cursor.rowcount > 0:
+        return
+    story = Story(story_ident)
+    cursor.execute('INSERT INTO stories (id, time) VALUES (%s, %s)',
+                   (story.ident, story.time))
 
 # https://github.com/HackerNews/API
 API_ROOT = 'https://hacker-news.firebaseio.com/v0'
