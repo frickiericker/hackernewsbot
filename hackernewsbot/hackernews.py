@@ -8,13 +8,17 @@ API_ROOT = 'https://hacker-news.firebaseio.com/v0'
 
 async def query_story(ident):
     api = API_ROOT + '/item/{}.json'.format(ident)
+    print('query ' + api)
     response = await do_async(lambda: requests.get(api))
+    print('ok ' + api)
     response.raise_for_status()
     return json.loads(response.text)
 
 async def query_new_story_idents():
     api = API_ROOT + '/newstories.json'
+    print('query ' + api)
     response = await do_async(lambda: requests.get(api))
+    print('ok ' + api)
     response.raise_for_status()
     return json.loads(response.text)
 
