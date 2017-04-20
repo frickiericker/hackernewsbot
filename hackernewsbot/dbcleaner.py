@@ -13,7 +13,7 @@ class DatabaseCleaner(object):
     async def prune_stale_stories(self):
         with self._database.cursor() as cursor:
             cursor.execute('SELECT max(id) from stories;')
-            maximum_id = cursor.fetchone()
+            maximum_id, = cursor.fetchone()
             minimum_id = maximum_id - self._stories_to_keep + 1
             cursor.execute('DELETE FROM stories WHERE id < %s;',
                            (minimum_id, ))

@@ -24,7 +24,7 @@ class StoryPoster(object):
                             'WHERE stories.time < NOW() - INTERVAL %s ' +
                             'AND NOT processingStatus.processed;'),
                            (self._hold_time, ))
-            return cursor.fetchall()
+            return [story_ident for story_ident, in cursor]
 
     def _mark_story_processed(self, story_ident):
         with self._database.cursor() as cursor:
