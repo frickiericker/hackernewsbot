@@ -95,11 +95,11 @@ class StoryPoster(object):
                            (self._hold_time, ))
             stories = cursor.fetchall()
             LOG.debug('{} stories to post'.format(len(stories)))
-            if stories:
-                story_ident, submission_time = stories[-1]
-                story = Story(story_ident)
-                age = datetime.now(timezone.utc) - submission_time
-                LOG.debug('Last one: {} | {} {} | {}'.format(age, len(story.comments), story.score, story.title))
+            if len(stories) > 5:
+                for story_ident, submission_time in stories[-5:]:
+                    story = Story(story_ident)
+                    age = datetime.now(timezone.utc) - submission_time
+                    LOG.debug('Last one: {} | {} {} | {}'.format(age, len(story.comments), story.score, story.title))
 
 class Story(object):
     def __init__(self, ident):
