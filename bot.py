@@ -18,26 +18,18 @@ STORIES_TO_KEEP = int(os.environ.get('STORIES_TO_KEEP', 1000))
 
 def main():
     logging.getLogger().setLevel(logging.DEBUG)
-    with connect_to_database(DATABASE_URL) as story_database:
-        loop = asyncio.get_event_loop()
-        tasks = asyncio.gather(
-            make_collector(story_database).run(COLLECTOR_SLEEP),
-            make_botposter(story_database).run(BOTPOSTER_SLEEP),
-            make_dbcleaner(story_database).run(DBCLEANER_SLEEP)
-        )
-        loop.run_until_complete(tasks)
+    collector = StoryCollector(connect_to_database())
+    botposter = StoryPoster(connect_to_database(), timedelta(seconds=STORY_WARMUP))
+    dbcleaner = DatabaseCleaner(connect_to_database(), STORIES_TO_KEEP)
+    tasks = asyncio.gather(
+        collector.run(COLLECTOR_SLEEP),
+        botposter.run(BOTPOSTER_SLEEP),
+        dbcleaner.run(DBCLEANER_SLEEP)
+    )
+    asyncio.get_event_loop().run_until_complete(tasks)
 
-def make_collector(story_database):
-    return StoryCollector(story_database)
-
-def make_botposter(story_database):
-    return StoryPoster(story_database, timedelta(seconds=STORY_WARMUP))
-
-def make_dbcleaner(story_database):
-    return DatabaseCleaner(story_database, STORIES_TO_KEEP)
-
-def connect_to_database(uri):
-    uri = urlparse(uri)
+def connect_to_database():
+    uri = urlparse(DATABASE_URL)
     connection = psycopg2.connect(
         database=uri.path[1:],
         user=uri.username,
