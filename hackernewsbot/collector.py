@@ -31,6 +31,8 @@ class StoryCollector(object):
         with self._database.cursor() as cursor:
             cursor.execute('INSERT INTO stories (id, time) VALUES (%s, %s);',
                            (story.ident, story.time))
+            cursor.execute('INSERT INTO processingStatus (id, processed) VALUES (%s, FALSE);',
+                           (story.ident, ))
         self._database.commit()
 
     def _has_story(self, story_ident):

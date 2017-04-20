@@ -14,7 +14,7 @@ COLLECTOR_SLEEP = int(os.environ.get('COLLECTOR_SLEEP', 300))
 BOTPOSTER_SLEEP = int(os.environ.get('BOTPOSTER_SLEEP', 10))
 DBCLEANER_SLEEP = int(os.environ.get('DBCLEANER_SLEEP', 500))
 STORY_WARMUP = int(os.environ.get('STORY_WARMUP', 60 * 60))
-STORY_TTL = int(os.environ.get('STORY_TTL', 12 * 60 * 60))
+STORIES_TO_KEEP = int(os.environ.get('STORIES_TO_KEEP', 1000))
 
 def main():
     logging.getLogger().setLevel(logging.DEBUG)
@@ -34,7 +34,7 @@ def make_botposter(story_database):
     return StoryPoster(story_database, timedelta(seconds=STORY_WARMUP))
 
 def make_dbcleaner(story_database):
-    return DatabaseCleaner(story_database, timedelta(seconds=STORY_TTL))
+    return DatabaseCleaner(story_database, STORIES_TO_KEEP)
 
 def connect_to_database(uri):
     uri = urlparse(uri)

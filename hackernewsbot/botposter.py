@@ -15,15 +15,20 @@ class StoryPoster(object):
             await asyncio.sleep(sleep)
 
     async def post_stories(self):
+        for story_ident in self._query_feasible_stories():
+            self._mark_story_processed(story_ident)
+
+    def _query_feasible_stories(self):
         with self._database.cursor() as cursor:
-            cursor.execute('SELECT * FROM stories WHERE time < NOW() - INTERVAL %s;',
+            cursor.execute(('SELECT stories.id FROM stories, processingStatus ' +
+                            'WHERE stories.time < NOW() - INTERVAL %s ' +
+                            'AND NOT processingStatus.processed;'),
                            (self._hold_time, ))
-            stories = cursor.fetchall()
-            print('{} stories to post'.format(len(stories)))
-            if len(stories) > 20:
-                for story_ident, submission_time in stories[-20:]:
-                    story = Story(story_ident)
-                    if story.deleted or story.dead:
-                        continue
-                    age = datetime.now(timezone.utc) - submission_time
-                    print('Last one: {} | {} {} | {}'.format(age, len(story.comments), story.score, story.title))
+            return cursor.fetchall()
+
+    def _mark_story_processed(self, story_ident):
+        with self._database.cursor() as cursor:
+            cursor.execute('UPDATE processingStatus SET processed = TRUE WHERE id = %s;',
+                           (story_ident, ))
+        self._database.commit()
+
