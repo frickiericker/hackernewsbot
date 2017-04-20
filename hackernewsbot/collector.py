@@ -1,7 +1,7 @@
 import asyncio
 import logging
 
-from hackernewsbot.hackernews import Story
+from hackernewsbot.hackernews import Story, query_new_story_idents
 
 class StoryCollector(object):
     def __init__(self, database):
@@ -12,7 +12,7 @@ class StoryCollector(object):
             try:
                 await self.collect_new_stories()
             except Exception as e:
-                print('error: (story {}) {}'.format(story_ident, e))
+                print('error: {}'.format(e))
             await asyncio.sleep(sleep)
 
     async def collect_new_stories(self):
