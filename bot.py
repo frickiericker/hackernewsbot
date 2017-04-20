@@ -7,11 +7,14 @@ from urllib.parse import urlparse
 
 from hackernewsbot.collector import StoryCollector
 from hackernewsbot.botposter import StoryPoster
+from hackernewsbot.dbcleaner import DatabaseCleaner
 
 DATABASE_URL = os.environ.get('DATABASE_URL', None)
 COLLECTOR_SLEEP = int(os.environ.get('COLLECTOR_SLEEP', 300))
 BOTPOSTER_SLEEP = int(os.environ.get('BOTPOSTER_SLEEP', 10))
+DBCLEANER_SLEEP = int(os.environ.get('DBCLEANER_SLEEP', 100))
 BOTPOST_HOLD_TIME = int(os.environ.get('BOTPOST_HOLD_TIME', 60)) # minutes
+STORY_TTL = int(os.environ.get('STORY_TTL', 12 * 60 * 60))
 
 def main():
     logging.getLogger().setLevel('debug')
@@ -19,7 +22,8 @@ def main():
         loop = asyncio.get_event_loop()
         tasks = asyncio.gather(
             make_collector(story_database).run(COLLECTOR_SLEEP),
-            make_botposter(story_database).run(BOTPOSTER_SLEEP)
+            make_botposter(story_database).run(BOTPOSTER_SLEEP),
+            make_dbcleaner(story_database).run(DBCLEANER_SLEEP)
         )
         loop.run_until_complete(tasks)
 
@@ -28,6 +32,9 @@ def make_collector(story_database):
 
 def make_botposter(story_database):
     return StoryPoster(story_database, timedelta(minutes=BOTPOST_HOLD_TIME))
+
+def make_dbcleaner(story_database):
+    return DatabaseCleaner(story_database, timedelta(seconds=STORY_TTL))
 
 def connect_to_database(uri):
     uri = urlparse(uri)
