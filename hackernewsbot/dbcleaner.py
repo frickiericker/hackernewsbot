@@ -13,10 +13,14 @@ class DatabaseCleaner(object):
 
     async def prune_stale_stories(self):
         with self._database.cursor() as cursor:
-            cursor.execute('SELECT max(id) from stories;')
-            highest_id, = cursor.fetchone()
-            stale_id = highest_id - self._stories_to_keep
-            cursor.execute('DELETE FROM stories WHERE id <= %s;',
-                           (stale_id, ))
-            logging.debug('deleted stories <= {}'.format(stale_id))
+            cursor.execute('SELECT max(ord) from processingStatus;')
+            highest_ord, = cursor.fetchone()
+            stale_ord = highest_ord - self._stories_to_keep
+            cursor.execute(('DELETE FROM stories USING processingStatus ' +
+                            'WHERE stories.id = processingStatus.id ' +
+                            'AND processingStatus.ord <= %s;'),
+                           (stale_ord, ))
+            cursor.execute('DELETE FROM processingStatus WHERE ord <= %s;',
+                           (stale_ord, ))
+            logging.debug('deleted stories <= {}'.format(stale_ord))
         self._database.commit()
