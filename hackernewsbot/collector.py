@@ -17,7 +17,7 @@ class StoryCollector(object):
 
     async def collect_new_stories(self):
         logging.debug('collecting new stories')
-        for story_ident in query_new_story_idents():
+        for story_ident in reversed(list(query_new_story_idents())):
             await self._insert_story_if_not_exists(story_ident)
 
     async def _insert_story_if_not_exists(self, story_ident):
