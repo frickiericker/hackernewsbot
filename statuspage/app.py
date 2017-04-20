@@ -12,7 +12,7 @@ def top_page():
         return get_database_status(database)
 
 def get_database_status(database):
-    stories = get_story_statuses()
+    stories = get_story_statuses(database)
     num_processed = sum(1 for ident, serial, processed in stories if processed)
     return '{} stories, {} processed'.format(len(stories), num_processed)
 
