@@ -22,10 +22,10 @@ class StoryCollector(object):
         if self._has_story(story_ident):
             return
         logging.debug('inserting {}'.format(story_ident))
-        self._insert_story(story_ident)
+        await self._insert_story(story_ident)
 
-    def _insert_story(self, story_ident):
-        story = Story(story_ident)
+    async def _insert_story(self, story_ident):
+        story = await Story.query(story_ident)
         with self._database.cursor() as cursor:
             cursor.execute('INSERT INTO stories (id, time) VALUES (%s, %s);',
                            (story.ident, story.time))

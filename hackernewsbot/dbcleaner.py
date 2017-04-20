@@ -8,10 +8,10 @@ class DatabaseCleaner(object):
 
     async def run(self, sleep):
         while True:
-            await self.prune_stale_stories()
+            self.prune_stale_stories()
             await asyncio.sleep(sleep)
 
-    async def prune_stale_stories(self):
+    def prune_stale_stories(self):
         with self._database.cursor() as cursor:
             cursor.execute('SELECT max(ord) from processingStatus;')
             highest_ord, = cursor.fetchone()

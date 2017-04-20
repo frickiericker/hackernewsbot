@@ -2,21 +2,28 @@ from datetime import datetime, timezone
 import json
 import requests
 
+from .asyncutil import do_async
+
 API_ROOT = 'https://hacker-news.firebaseio.com/v0'
 
-def query_story(ident):
-    response = requests.get('{}/item/{}.json'.format(API_ROOT, ident))
+async def query_story(ident):
+    api = API_ROOT + '/item/{}.json'.format(ident)
+    response = await do_async(lambda: requests.get(api))
+    response.raise_for_status()
     return json.loads(response.text)
 
-def query_new_story_idents():
-    response = requests.get(API_ROOT + '/newstories.json')
-    story_idents = json.loads(response.text)
-    return story_idents
+async def query_new_story_idents():
+    api = API_ROOT + '/newstories.json'
+    response = await do_async(lambda: requests.get(api))
+    response.raise_for_status()
+    return json.loads(response.text)
 
 class Story(object):
-    def __init__(self, ident):
-        self._ident = ident
-        self._set_properties(**query_story(ident))
+    @staticmethod
+    async def query(ident):
+        story = Story()
+        story._ident = ident
+        story._set_properties(**await query_story(ident))
 
     def _set_properties(self, time=None, deleted=False, dead=False, kids=[],
                         score=None, title=None, **others):
