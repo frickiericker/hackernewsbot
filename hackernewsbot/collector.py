@@ -14,7 +14,7 @@ class StoryCollector(object):
             await asyncio.sleep(sleep)
 
     async def collect_new_stories(self):
-        for story_ident in reversed(query_new_story_idents()):
+        for story_ident in reversed(await query_new_story_idents()):
             await self._insert_story_if_not_exists(story_ident)
             await asyncio.sleep(self._query_delay)
 
