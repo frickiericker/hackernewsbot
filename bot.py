@@ -17,7 +17,7 @@ STORY_WARMUP = int(os.environ.get('STORY_WARMUP', 60 * 60))
 STORY_TTL = int(os.environ.get('STORY_TTL', 12 * 60 * 60))
 
 def main():
-    logging.getLogger().setLevel('debug')
+    logging.getLogger().setLevel(logging.DEBUG)
     with connect_to_database(DATABASE_URL) as story_database:
         loop = asyncio.get_event_loop()
         tasks = asyncio.gather(
