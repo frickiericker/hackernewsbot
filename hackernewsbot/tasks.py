@@ -67,6 +67,7 @@ class Broker:
     async def _filter_and_post(self, story):
         for filter_func in self._filters:
             if not filter_func(story):
+                logging.info('drop {} - {}'.format(story.id, story.title))
                 return False
         for poster in self._posters:
             await poster.post(story)
