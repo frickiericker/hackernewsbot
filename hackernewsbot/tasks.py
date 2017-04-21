@@ -46,9 +46,13 @@ class Broker:
         self._repository = repository
         self._hold_time = hold_time
         self._posters = []
+        self._filters = []
 
     def add_poster(self, poster):
         self._posters.append(poster)
+
+    def add_filter(self, filter_func):
+        self._filtes.append(filter_func)
 
     async def run(self, sleep):
         while True:
@@ -57,14 +61,17 @@ class Broker:
             await asyncio.sleep(sleep)
 
     async def post_stories(self):
-        for story_id in self._query_feasible_stories():
-            story = await Story.query(story_id)
-            for poster in self._posters:
-                await poster.post(story)
+        story_ids = self._repository.get_pending_stories(self._hold_time)
+        for story_id in story_ids:
+            await self._filter_and_post(await Story.query(story_id))
             self._mark_story_processed(story_id)
 
-    def _query_feasible_stories(self):
-        return self._repository.get_pending_stories(self._hold_time)
+    async def _filter_and_post(self, story):
+        for filter_func in self._filters:
+            if not filter_func(story):
+                return
+        for poster in self._posters:
+            await poster.post(story)
 
     def _mark_story_processed(self, story_id):
         self._repository.mark_story(story_id, processed=True)
