@@ -1,8 +1,6 @@
 import asyncio
 from datetime import datetime, timedelta, timezone
 import logging
-import psycopg2
-from urllib.parse import urlparse
 
 from appenv import *
 from hackernewsbot.poster import MastodonPoster
