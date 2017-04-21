@@ -60,7 +60,7 @@ class StoryRepository:
                 delete from story_submission_time where index <= %(threshold)s;
                 delete from story_processing_status where index <= %(threshold)s;
             """, {'threshold': threshold})
-        database.commit()
+            database.commit()
 
     def get_stored_stories(self):
         with _connect(self._url) as database, database.cursor() as cursor:
