@@ -8,9 +8,10 @@ STORY_MINIMUM_COMMENTS = int(os.environ.get('STORY_MINIMUM_COMMENTS', 1))
 STORY_MINIMUM_SCORE = int(os.environ.get('STORY_MINIMUM_SCORE', 10))
 
 HACKERNEWS_API_WAIT = float(os.environ.get('HACKERNEWS_API_WAIT', 0.5))
-COLLECTOR_SLEEP = int(os.environ.get('COLLECTOR_SLEEP', 300))
-CLEANER_SLEEP = int(os.environ.get('CLEANER_SLEEP', 300))
-BROKER_SLEEP = int(os.environ.get('BROKER_SLEEP', 10))
+COLLECTOR_SLEEP = float(os.environ.get('COLLECTOR_SLEEP', 300))
+CLEANER_SLEEP = float(os.environ.get('CLEANER_SLEEP', 300))
+BROKER_SLEEP = float(os.environ.get('BROKER_SLEEP', 10))
+POSTING_WAIT = float(os.environ.get('POSTING_WAIT', 5))
 
 MASTODON_INSTANCE = os.environ.get('MASTODON_INSTANCE', None)
 MASTODON_CLIENT_ID = os.environ.get('MASTODON_CLIENT_ID', None)

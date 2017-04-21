@@ -38,7 +38,8 @@ class Bot:
 
     def _make_broker(self):
         self._broker = Broker(StoryRepository(DATABASE_URL),
-                              hold_time=timedelta(seconds=STORY_WARMUP))
+                              hold_time=timedelta(seconds=STORY_WARMUP),
+                              posting_wait=POSTING_WAIT)
         self._set_filter()
         self._set_poster()
 

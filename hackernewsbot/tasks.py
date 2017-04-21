@@ -38,9 +38,10 @@ class Cleaner:
             await asyncio.sleep(sleep)
 
 class Broker:
-    def __init__(self, repository, hold_time):
+    def __init__(self, repository, hold_time, posting_wait):
         self._repository = repository
         self._hold_time = hold_time
+        self._posting_wait = posting_wait
         self._posters = []
         self._filters = []
 
@@ -60,6 +61,7 @@ class Broker:
         for story_id in story_ids:
             await self._filter_and_post(await Story.query(story_id))
             self._mark_story_processed(story_id)
+            await asyncio.sleep(self._posting_wait)
 
     async def _filter_and_post(self, story):
         for filter_func in self._filters:
