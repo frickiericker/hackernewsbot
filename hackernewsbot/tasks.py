@@ -59,16 +59,18 @@ class Broker:
     async def _post_pending_stories(self):
         story_ids = self._repository.get_pending_stories(self._hold_time)
         for story_id in story_ids:
-            await self._filter_and_post(await Story.query(story_id))
+            posted = await self._filter_and_post(await Story.query(story_id))
             self._mark_story_processed(story_id)
-            await asyncio.sleep(self._posting_wait)
+            if posted:
+                await asyncio.sleep(self._posting_wait)
 
     async def _filter_and_post(self, story):
         for filter_func in self._filters:
             if not filter_func(story):
-                return
+                return False
         for poster in self._posters:
             await poster.post(story)
+        return True
 
     def _mark_story_processed(self, story_id):
         self._repository.mark_story(story_id, processed=True)
