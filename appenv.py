@@ -2,9 +2,12 @@ import os
 
 DATABASE_URL = os.environ.get('DATABASE_URL', None)
 STORIES_TO_KEEP = int(os.environ.get('STORIES_TO_KEEP', 1000))
-STORY_WARMUP = int(os.environ.get('STORY_WARMUP', 6000))
-HACKERNEWS_API_WAIT = float(os.environ.get('HACKERNEWS_API_WAIT', 0.5))
 
+STORY_WARMUP = int(os.environ.get('STORY_WARMUP', 6000))
+STORY_MINIMUM_COMMENTS = int(os.environ.get('STORY_MINIMUM_COMMENTS', 1))
+STORY_MINIMUM_SCORE = int(os.environ.get('STORY_MINIMUM_SCORE', 10))
+
+HACKERNEWS_API_WAIT = float(os.environ.get('HACKERNEWS_API_WAIT', 0.5))
 COLLECTOR_SLEEP = int(os.environ.get('COLLECTOR_SLEEP', 300))
 CLEANER_SLEEP = int(os.environ.get('CLEANER_SLEEP', 300))
 BROKER_SLEEP = int(os.environ.get('BROKER_SLEEP', 10))
