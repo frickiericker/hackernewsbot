@@ -59,6 +59,7 @@ class Broker:
     async def post_stories(self):
         for story_id in self._query_feasible_stories():
             story = await Story.query(story_id)
+            print('got story {}'.format(story.title))
             for poster in self._posters:
                 await poster.post(story)
             self._mark_story_processed(story_id)
