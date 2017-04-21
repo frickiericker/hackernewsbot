@@ -55,7 +55,9 @@ class Broker:
 
     async def post_stories(self):
         for story_ident in self._query_feasible_stories():
-            logging.debug('posting {}'.format(story_ident))
+            story = Story.query(story_ident)
+            for poster in self._posters:
+                await poster.post(story)
             self._mark_story_processed(story_ident)
 
     def _query_feasible_stories(self):
