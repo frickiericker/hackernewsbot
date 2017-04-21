@@ -1,5 +1,6 @@
 import asyncio
 from datetime import datetime, timezone
+import logging
 
 from .hackernewsapi import Story, query_recent_story_ids
 
