@@ -1,11 +1,10 @@
 import logging
-from datetime import datetime, timezone
 import json
 import requests
 
 from appenv import MASTODON_TIMEOUT
 
-MESSAGE_TEMPLATE = '{title}\n{uri}\n{score} | {comments}\n({age})'
+MESSAGE_TEMPLATE = '{title}\n{uri}\n{score} | {comments}'
 
 def plural(number, thing):
     if number == 1:
@@ -37,15 +36,11 @@ class MastodonPoster:
         logging.info('posting {} | {}-{} | {}'.format(
             story.id, len(story.comments), story.score, story.title
         ))
-        now = datetime.now(timezone.utc)
-        age = now - story.time
-        age_in_minutes = round(age.total_seconds() / 60)
         text = MESSAGE_TEMPLATE.format(
             title=story.title,
             uri='https://news.ycombinator.com/item?id={}'.format(story.id),
             score=plural(story.score, 'point'),
-            comments=plural(len(story.comments), 'comment'),
-            age='in {} minutes'.format(age_in_minutes)
+            comments=plural(len(story.comments), 'comment')
         )
         response = requests.post(self._instance + '/api/v1/statuses', {
             'status': text,
