@@ -65,9 +65,10 @@ class StoryRepository:
         with self._database.cursor() as cursor:
             cursor.execute("""
                 select story.id
-                       from story, story_processing_status
+                       from story, story_submission_time, story_processing_status
                        where story.index = story_processing_status.index and
-                             story.time <= now() - interval %(age)s and
-                             not story_processing_status.processed;
+                             story.index = story_submission_time.index and
+                             not story_processing_status.processed and
+                             story_submission_time.time <= now() - interval %(age)s;
             """, {'age': age})
             return [story_id for story_id, in cursor]
