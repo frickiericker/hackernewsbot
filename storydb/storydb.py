@@ -61,6 +61,13 @@ class StoryRepository:
             """, {'threshold': threshold})
         self._database.commit()
 
+    def get_stored_stories(self):
+        with self._database.cursor() as cursor:
+            cursor.execute("""
+                select id from story
+            """)
+            return [story_id for story_id, in cursor]
+
     def get_pending_stories(self, age=timedelta(0)):
         with self._database.cursor() as cursor:
             cursor.execute("""
