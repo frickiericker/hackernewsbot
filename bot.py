@@ -20,7 +20,7 @@ class Bot:
         self._make_cleaner()
         self._make_broker()
 
-    def run():
+    def run(self):
         tasks = asyncio.gather(
             self._collector.run(COLLECTOR_SLEEP),
             self._cleaner.run(CLEANER_SLEEP),
