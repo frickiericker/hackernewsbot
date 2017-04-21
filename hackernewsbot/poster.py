@@ -5,7 +5,7 @@ import requests
 
 from appenv import MASTODON_TIMEOUT
 
-MESSAGE_TEMPLATE = '{title}\n{uri}\n\n{score} | {comments}\n({age})'
+MESSAGE_TEMPLATE = '{title}\n{uri}\n{score} | {comments}\n({age})'
 
 def plural(number, thing):
     if number == 1:
