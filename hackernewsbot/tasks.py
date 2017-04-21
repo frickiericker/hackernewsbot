@@ -1,6 +1,5 @@
 import asyncio
 from datetime import datetime, timezone
-import logging
 
 from .hackernewsapi import Story, query_recent_story_ids
 
@@ -11,7 +10,6 @@ class Collector:
 
     async def run(self, sleep):
         while True:
-            logging.debug('collector')
             await self._collect_new_stories()
             await asyncio.sleep(sleep)
 
@@ -26,7 +24,6 @@ class Collector:
         await self._insert_story(story_id)
 
     async def _insert_story(self, story_id):
-        logging.debug('inserting {}'.format(story_id))
         story = await Story.query(story_id)
         self._repository.insert_story(story.id, story.time)
 
@@ -37,7 +34,6 @@ class Cleaner:
 
     async def run(self, sleep):
         while True:
-            logging.debug('cleaner')
             self._repository.delete_stale_stories(self._stories_to_keep)
             await asyncio.sleep(sleep)
 
@@ -56,7 +52,6 @@ class Broker:
 
     async def run(self, sleep):
         while True:
-            logging.debug('broker')
             await self._post_pending_stories()
             await asyncio.sleep(sleep)
 
