@@ -20,7 +20,7 @@ class Collector:
             await asyncio.sleep(self._api_wait)
 
     async def _insert_story_if_not_exists(self, story_id):
-        if _self._repository.has_story(story_id):
+        if self._repository.has_story(story_id):
             return
         await self._insert_story(story_id)
 
