@@ -6,7 +6,7 @@ STORIES_TO_KEEP = int(os.environ.get('STORIES_TO_KEEP', 1000))
 STORY_WARMUP = float(os.environ.get('STORY_WARMUP', 6000))
 STORY_COOLDOWN = float(os.environ.get('STORY_COOLDOWN', 10000))
 STORY_MINIMUM_COMMENTS = int(os.environ.get('STORY_MINIMUM_COMMENTS', 1))
-STORY_MINIMUM_SCORE = int(os.environ.get('STORY_MINIMUM_SCORE', 5))
+STORY_MINIMUM_SCORE = int(os.environ.get('STORY_MINIMUM_SCORE', 4))
 
 HACKERNEWS_API_WAIT = float(os.environ.get('HACKERNEWS_API_WAIT', 0.5))
 COLLECTOR_SLEEP = float(os.environ.get('COLLECTOR_SLEEP', 300))
