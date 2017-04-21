@@ -6,4 +6,6 @@ class MastodonPoster:
         pass
 
     async def post(self, story):
-        logging.debug('posting {} | {}'.format(story.id, story.title))
+        logging.debug('posting {} | {}-{} | {}'.format(
+            story.id, len(story.comments), story.score, story.title
+        ))
