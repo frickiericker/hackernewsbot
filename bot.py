@@ -44,7 +44,7 @@ class Bot:
 
     def _set_filter(self):
         self._broker.add_filter(
-            lambda story: (len(story.comment) >= STORY_MINIMUM_COMMENTS and
+            lambda story: (len(story.comments) >= STORY_MINIMUM_COMMENTS and
                            story.score >= STORY_MINIMUM_SCORE)
         )
 
