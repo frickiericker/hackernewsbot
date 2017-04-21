@@ -12,10 +12,10 @@ class Collector:
     async def run(self, sleep):
         while True:
             logging.debug('collector')
-            await self.collect_new_stories()
+            await self._collect_new_stories()
             await asyncio.sleep(sleep)
 
-    async def collect_new_stories(self):
+    async def _collect_new_stories(self):
         for story_id in reversed(await query_recent_story_ids()):
             await self._insert_story_if_not_exists(story_id)
             await asyncio.sleep(self._api_wait)
@@ -57,10 +57,10 @@ class Broker:
     async def run(self, sleep):
         while True:
             logging.debug('broker')
-            await self.post_stories()
+            await self._post_pending_stories()
             await asyncio.sleep(sleep)
 
-    async def post_stories(self):
+    async def _post_pending_stories(self):
         story_ids = self._repository.get_pending_stories(self._hold_time)
         for story_id in story_ids:
             await self._filter_and_post(await Story.query(story_id))
