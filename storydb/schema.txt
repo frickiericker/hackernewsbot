@@ -2,7 +2,7 @@ create table story (
     index serial primary key,
     id    integer
 );
-create table story_submission_date (
+create table story_submission_time (
     index integer primary key,
     time  timestamp with time zone
 );
