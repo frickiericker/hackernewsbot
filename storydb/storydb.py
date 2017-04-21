@@ -39,9 +39,10 @@ class StoryRepository:
     def mark_story(self, story_id, processed=True):
         with self._database.cursor() as cursor:
             cursor.execute("""
-                update story_processing_status
-                       set processed = %(processed)s
-                       where id = %(id)s;
+                update story_processing_status set processed = %(processed)s
+                       from story
+                       where story.index = story_processing_status.index and
+                             story.id = %(id)s;
             """, {'id': story_id, 'processed': processed})
         self._database.commit()
 
