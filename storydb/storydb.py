@@ -70,6 +70,7 @@ class StoryRepository:
             return [story_id for story_id, in cursor]
 
     def get_pending_stories(self, age=timedelta(0)):
+        print('get_pending_stories {}'.format(age))
         with self._database.cursor() as cursor:
             cursor.execute("""
                 select story.id
