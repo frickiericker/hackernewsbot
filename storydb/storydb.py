@@ -5,11 +5,11 @@ import psycopg2
 def connect_to_postgres(url):
     url = urlparse(url)
     connection = psycopg2.connect(
-        database=uri.path[1:],
-        user=uri.username,
-        password=uri.password,
-        host=uri.hostname,
-        port=uri.port
+        database=url.path[1:],
+        user=url.username,
+        password=url.password,
+        host=url.hostname,
+        port=url.port
     )
     return connection
 
