@@ -1,0 +1,12 @@
+create table story (
+    index serial primary key,
+    id    integer
+);
+create table story_submission_date (
+    index integer primary key,
+    time  timestamp with time zone
+);
+create table story_processing_status (
+    index     integer primary key,
+    processed boolean
+);
