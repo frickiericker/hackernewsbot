@@ -19,6 +19,7 @@ class MastodonPoster:
         })
         response_data = json.loads(response.text)
         self._access_token = response_data['access_token']
+        self._token_type = response_data['token_type']
         logging.info('auth: {}'.format(response.text))
         response.raise_for_status()
 
@@ -30,15 +31,15 @@ class MastodonPoster:
         age = now - story.time
         age_in_minutes = round(age.total_seconds() / 60)
         hackernews_uri = 'https://news.ycombinator.com/item?id={}'.format(story.id)
-        text = '{}\n\n{} comments {} points\n(in {} minutes)\n\n{}'.format(
-            story.title, len(story.comments), story.score,
-            age_in_minutes, hackernews_uri
+        text = '{}\n{}\n\n{} comments {} points\n(in {} minutes)'.format(
+            story.title, hackernews_uri, len(story.comments), story.score,
+            age_in_minutes
         )
         response = requests.post(self._instance + '/api/v1/statuses', {
             'status': text,
             'visibility': 'unlisted'
         }, headers={
-            'Authorization': 'Bearer ' + self._access_token
+            'Authorization': '{} {}'.format(self._token_type, self._access_token)
         })
         logging.info('response: ' + response.text)
         response.raise_for_status()
