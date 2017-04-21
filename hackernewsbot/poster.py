@@ -36,6 +36,6 @@ class MastodonPoster:
             'status': text,
             'visibility': 'unlisted',
         }, headers={
-            'Authorization: access_token {}'.format(self._access_token)
+            'Authorization': 'access_token {}'.format(self._access_token)
         })
         print(response.text)
