@@ -3,6 +3,8 @@ from datetime import datetime, timezone
 import json
 import requests
 
+from appenv import MASTODON_TIMEOUT
+
 class MastodonPoster:
     def __init__(self, instance, client_id, client_secret, email, password):
         self._instance = instance
@@ -16,7 +18,7 @@ class MastodonPoster:
             'client_secret': client_secret,
             'username': email,
             'password': password
-        })
+        }, timeout=MASTODON_TIMEOUT)
         response_data = json.loads(response.text)
         self._access_token = response_data['access_token']
         self._token_type = response_data['token_type']
@@ -40,6 +42,6 @@ class MastodonPoster:
             'visibility': 'unlisted'
         }, headers={
             'Authorization': '{} {}'.format(self._token_type, self._access_token)
-        })
+        }, timeout=MASTODON_TIMEOUT)
         logging.info('response: ' + response.text)
         response.raise_for_status()

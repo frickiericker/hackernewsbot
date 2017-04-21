@@ -14,6 +14,9 @@ CLEANER_SLEEP = float(os.environ.get('CLEANER_SLEEP', 300))
 BROKER_SLEEP = float(os.environ.get('BROKER_SLEEP', 10))
 POSTING_WAIT = float(os.environ.get('POSTING_WAIT', 5))
 
+HACKERNEWS_TIMEOUT = os.environ.get('HACKERNEWS_TIMEOUT', 5.0)
+MASTODON_TIMEOUT = os.environ.get('MASTODON_TIMEOUT', 10.0)
+
 MASTODON_INSTANCE = os.environ.get('MASTODON_INSTANCE', None)
 MASTODON_CLIENT_ID = os.environ.get('MASTODON_CLIENT_ID', None)
 MASTODON_CLIENT_SECRET = os.environ.get('MASTODON_CLIENT_SECRET', None)
