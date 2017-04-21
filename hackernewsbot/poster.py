@@ -33,8 +33,8 @@ class MastodonPoster:
         response.raise_for_status()
 
     async def post(self, story):
-        logging.info('posting {} | {}-{} | {}'.format(
-            story.id, len(story.comments), story.score, story.title
+        logging.info('post {} ({}/{}) - {}'.format(
+            story.id, story.score, len(story.comments), story.title
         ))
         text = MESSAGE_TEMPLATE.format(
             title=story.title,
