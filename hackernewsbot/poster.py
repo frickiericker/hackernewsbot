@@ -19,7 +19,8 @@ class MastodonPoster:
         })
         response_data = json.loads(response.text)
         self._access_token = response_data['access_token']
-        logging.info('Access token: {}'.format(self._access_token))
+        logging.info('auth: {}'.format(response.text))
+        response.raise_for_status()
 
     async def post(self, story):
         logging.info('posting {} | {}-{} | {}'.format(
@@ -35,8 +36,9 @@ class MastodonPoster:
         )
         response = requests.post(self._instance + '/api/v1/statuses', {
             'status': text,
-            'visibility': 'unlisted',
+            'visibility': 'unlisted'
         }, headers={
-            'Authorization': self._access_token
+            'Authorization': 'Bearer ' + self._access_token
         })
         logging.info('response: ' + response.text)
+        response.raise_for_status()
