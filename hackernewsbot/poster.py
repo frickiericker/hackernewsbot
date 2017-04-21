@@ -19,6 +19,7 @@ class MastodonPoster:
         })
         response_data = json.loads(response.text)
         self._access_token = response_data['access_token']
+        logging.info('Access token: {}'.format(self._access_token))
 
     async def post(self, story):
         logging.info('posting {} | {}-{} | {}'.format(
@@ -36,6 +37,6 @@ class MastodonPoster:
             'status': text,
             'visibility': 'unlisted',
         }, headers={
-            'Authorization': 'access_token {}'.format(self._access_token)
+            'Authorization': self._access_token
         })
-        print(response.text)
+        logging.info('response: ' + response.text)
