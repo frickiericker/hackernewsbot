@@ -52,7 +52,7 @@ class Broker:
         self._posters.append(poster)
 
     def add_filter(self, filter_func):
-        self._filtes.append(filter_func)
+        self._filters.append(filter_func)
 
     async def run(self, sleep):
         while True:
