@@ -45,8 +45,18 @@ class Bot:
 
     def _set_filter(self):
         self._broker.add_filter(
-            lambda story: (len(story.comments) >= STORY_MINIMUM_COMMENTS and
-                           story.score >= STORY_MINIMUM_SCORE)
+            lambda story:
+                not (story.dead or story.deleted)
+        )
+        self._broker.add_filter(
+            lambda story:
+                (datetime.now(timezone.utc) - story.time)
+                    .total_seconds() < STORY_COOLDOWN
+        )
+        self._broker.add_filter(
+            lambda story:
+                len(story.comments) >= STORY_MINIMUM_COMMENTS and
+                story.score >= STORY_MINIMUM_SCORE
         )
 
     def _set_poster(self):

@@ -3,7 +3,8 @@ import os
 DATABASE_URL = os.environ.get('DATABASE_URL', None)
 STORIES_TO_KEEP = int(os.environ.get('STORIES_TO_KEEP', 1000))
 
-STORY_WARMUP = int(os.environ.get('STORY_WARMUP', 6000))
+STORY_WARMUP = float(os.environ.get('STORY_WARMUP', 6000))
+STORY_COOLDOWN = float(os.environ.get('STORY_COOLDOWN', 10000))
 STORY_MINIMUM_COMMENTS = int(os.environ.get('STORY_MINIMUM_COMMENTS', 1))
 STORY_MINIMUM_SCORE = int(os.environ.get('STORY_MINIMUM_SCORE', 10))
 
