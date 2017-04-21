@@ -11,6 +11,7 @@ class Collector:
 
     async def run(self, sleep):
         while True:
+            logging.debug('collector')
             await self.collect_new_stories()
             await asyncio.sleep(sleep)
 
@@ -36,6 +37,7 @@ class Cleaner:
 
     async def run(self, sleep):
         while True:
+            logging.debug('cleaner')
             self._repository.delete_stale_stories(self._stories_to_keep)
             await asyncio.sleep(sleep)
 
@@ -50,6 +52,7 @@ class Broker:
 
     async def run(self, sleep):
         while True:
+            logging.debug('broker')
             await self.post_stories()
             await asyncio.sleep(sleep)
 
