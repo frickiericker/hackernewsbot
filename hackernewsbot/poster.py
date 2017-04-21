@@ -8,8 +8,7 @@ class MastodonPoster:
         self._authenticate(client_id, client_secret, email, password)
 
     def _authenticate(self, client_id, client_secret, email, password):
-        uri = instance + '/oauth/token'
-        response = requests.post(uri, {
+        response = requests.post(self._instance + '/oauth/token', {
             'grant_type': 'password',
             'scope': 'write',
             'client_id': client_id,
