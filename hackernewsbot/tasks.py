@@ -54,15 +54,15 @@ class Broker:
             await asyncio.sleep(sleep)
 
     async def post_stories(self):
-        for story_ident in self._query_feasible_stories():
-            story = Story.query(story_ident)
+        for story_id in self._query_feasible_stories():
+            story = Story.query(story_id)
             for poster in self._posters:
                 await poster.post(story)
-            self._mark_story_processed(story_ident)
+            self._mark_story_processed(story_id)
 
     def _query_feasible_stories(self):
         return self._repository.get_pending_stories(self._hold_time)
 
-    def _mark_story_processed(self, story_ident):
-        self._repository.mark_story(story_ident, processed=True)
+    def _mark_story_processed(self, story_id):
+        self._repository.mark_story(story_id, processed=True)
 
