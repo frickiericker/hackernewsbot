@@ -30,7 +30,7 @@ class MastodonPoster:
         age = now - story.time
         age_in_minutes = round(age.total_seconds() / 60)
         hackernews_uri = 'https://news.ycombinator.com/item?id={}'.format(story.id)
-        text = '{}\n{} comments {} points (in {} minutes)\n\n{}'.format(
+        text = '{}\n\n{} comments {} points\n(in {} minutes)\n\n{}'.format(
             story.title, len(story.comments), story.score,
             age_in_minutes, hackernews_uri
         )
