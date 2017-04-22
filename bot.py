@@ -65,6 +65,13 @@ class Bot:
             email=MASTODON_EMAIL,
             password=MASTODON_PASSWORD
         ))
+        self._broker.add_poster(MastodonPoster(
+            instance=MASTODON_INSTANCE_2,
+            client_id=MASTODON_CLIENT_ID_2,
+            client_secret=MASTODON_CLIENT_SECRET_2,
+            email=MASTODON_EMAIL_2,
+            password=MASTODON_PASSWORD_2
+        ))
 
 if __name__ == '__main__':
     main()
