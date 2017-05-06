@@ -17,7 +17,7 @@ class MastodonPoster:
     def __init__(self, mastodon_api):
         self._mastodon = mastodon_api
 
-    async def post(self, story):
+    def post(self, story):
         self._mastodon.post_status({
             'status': _make_toot_text(story),
             'visibility': 'unlisted'
