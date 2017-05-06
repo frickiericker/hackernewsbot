@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 import logging
 
 from appenv import *
+from hackernewsbot.mastodonapi import MastodonAPI
 from hackernewsbot.poster import MastodonPoster
 from hackernewsbot.tasks import Collector, Cleaner, Broker
 from storydb.storydb import StoryRepository
@@ -58,20 +59,28 @@ class Bot:
         )
 
     def _set_poster(self):
-        self._broker.add_poster(MastodonPoster(
-            instance=MASTODON_INSTANCE,
+        self._add_main_poster()
+        self._add_sub_poster()
+
+    def _add_main_poster(self):
+        mastodon = MastodonAPI(MASTODON_INSTANCE, MASTODON_TIMEOUT)
+        mastodon.authenticate(
             client_id=MASTODON_CLIENT_ID,
             client_secret=MASTODON_CLIENT_SECRET,
             email=MASTODON_EMAIL,
-            password=MASTODON_PASSWORD
-        ))
-        self._broker.add_poster(MastodonPoster(
-            instance=MASTODON_INSTANCE_2,
+            password=MASTODON_PASSWORD)
+        self._broker.add_poster(MastodonPoster(mastodon))
+
+    def _add_sub_poster(self):
+        if not MASTODON_INSTANCE_2:
+            return
+        mastodon = MastodonAPI(MASTODON_INSTANCE_2, MASTODON_TIMEOUT)
+        mastodon.authenticate(
             client_id=MASTODON_CLIENT_ID_2,
             client_secret=MASTODON_CLIENT_SECRET_2,
             email=MASTODON_EMAIL_2,
-            password=MASTODON_PASSWORD_2
-        ))
+            password=MASTODON_PASSWORD_2)
+        self._broker.add_poster(MastodonPoster(mastodon))
 
 if __name__ == '__main__':
     main()

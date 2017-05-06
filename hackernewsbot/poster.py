@@ -1,9 +1,3 @@
-import logging
-import json
-import requests
-
-from appenv import MASTODON_TIMEOUT
-
 MESSAGE_TEMPLATE = '{title}\n{uri}\n{score} | {comments}'
 
 def _make_toot_text(story):
@@ -20,33 +14,11 @@ def _plural(number, thing):
         return '{} {}s'.format(number, thing)
 
 class MastodonPoster:
-    def __init__(self, instance, client_id, client_secret, email, password):
-        self._instance = instance
-        self._authenticate(client_id, client_secret, email, password)
-
-    def _authenticate(self, client_id, client_secret, email, password):
-        response = requests.post(self._instance + '/oauth/token', {
-            'grant_type': 'password',
-            'scope': 'write',
-            'client_id': client_id,
-            'client_secret': client_secret,
-            'username': email,
-            'password': password
-        }, timeout=MASTODON_TIMEOUT)
-        response_data = json.loads(response.text)
-        self._access_token = response_data['access_token']
-        self._token_type = response_data['token_type']
-        response.raise_for_status()
+    def __init__(self, mastodon_api):
+        self._mastodon = mastodon_api
 
     async def post(self, story):
-        logging.info('post {} ({}/{}) - {}'.format(
-            story.id, story.score, len(story.comments), story.title
-        ))
-        response = requests.post(self._instance + '/api/v1/statuses', {
+        self._mastodon.post_status({
             'status': _make_toot_text(story),
             'visibility': 'unlisted'
-        }, headers={
-            'Authorization': '{} {}'.format(self._token_type,
-                                            self._access_token)
-        }, timeout=MASTODON_TIMEOUT)
-        response.raise_for_status()
+        })
