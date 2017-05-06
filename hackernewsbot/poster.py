@@ -6,12 +6,18 @@ from appenv import MASTODON_TIMEOUT
 
 MESSAGE_TEMPLATE = '{title}\n{uri}\n{score} | {comments}'
 
-def plural(number, thing):
+def _make_toot_text(story):
+    return MESSAGE_TEMPLATE.format(
+        title=story.title,
+        uri=story.uri,
+        score=_plural(story.score, 'point'),
+        comments=_plural(len(story.comments), 'comment'))
+
+def _plural(number, thing):
     if number == 1:
         return '{} {}'.format(number, thing)
     else:
         return '{} {}s'.format(number, thing)
-
 
 class MastodonPoster:
     def __init__(self, instance, client_id, client_secret, email, password):
@@ -36,14 +42,8 @@ class MastodonPoster:
         logging.info('post {} ({}/{}) - {}'.format(
             story.id, story.score, len(story.comments), story.title
         ))
-        text = MESSAGE_TEMPLATE.format(
-            title=story.title,
-            uri=story.uri,
-            score=plural(story.score, 'point'),
-            comments=plural(len(story.comments), 'comment')
-        )
         response = requests.post(self._instance + '/api/v1/statuses', {
-            'status': text,
+            'status': _make_toot_text(story),
             'visibility': 'unlisted'
         }, headers={
             'Authorization': '{} {}'.format(self._token_type,
