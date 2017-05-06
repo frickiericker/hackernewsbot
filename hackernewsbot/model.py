@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 HACKERNEWS_ITEM_URI = 'https://news.ycombinator.com/item?id={id}'
 
-class Item(object):
+class Item:
     def __init__(self, item_id):
         self._id = item_id
 
