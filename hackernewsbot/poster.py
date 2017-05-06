@@ -38,7 +38,7 @@ class MastodonPoster:
         ))
         text = MESSAGE_TEMPLATE.format(
             title=story.title,
-            uri='https://news.ycombinator.com/item?id={}'.format(story.id),
+            uri=story.uri,
             score=plural(story.score, 'point'),
             comments=plural(len(story.comments), 'comment')
         )
