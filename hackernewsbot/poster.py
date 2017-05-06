@@ -46,6 +46,7 @@ class MastodonPoster:
             'status': text,
             'visibility': 'unlisted'
         }, headers={
-            'Authorization': '{} {}'.format(self._token_type, self._access_token)
+            'Authorization': '{} {}'.format(self._token_type,
+                                            self._access_token)
         }, timeout=MASTODON_TIMEOUT)
         response.raise_for_status()
