@@ -19,7 +19,7 @@ class Collector:
             await asyncio.sleep(sleep)
 
     async def _collect_new_stories(self):
-        for story_id in reversed(await query_recent_story_ids()):
+        for story_id in reversed(query_recent_story_ids()):
             await self._insert_story_if_not_exists(story_id)
             await asyncio.sleep(self._api_wait)
 
@@ -29,7 +29,7 @@ class Collector:
         await self._insert_story(story_id)
 
     async def _insert_story(self, story_id):
-        story = await query_story(story_id)
+        story = query_story(story_id)
         self._repository.insert_story(story.id, story.time)
 
 class Cleaner:
@@ -67,7 +67,7 @@ class Broker:
             if await self._process_story(story_id):
                 await asyncio.sleep(self._posting_wait)
 
-    async def _process_story(self):
+    async def _process_story(self, story_id):
         story = await query_story(story_id)
         posted = await self._post_if_viable(story)
         self._mark_story_processed(story_id)
@@ -84,7 +84,7 @@ class Broker:
 
     async def _post(self, story):
         for poster in self._posters:
-            await poster.post(story)
+            async poster.post(story)
 
     def _is_story_viable(self, story):
         for filter_func in self._filters:
