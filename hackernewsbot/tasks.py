@@ -4,6 +4,10 @@ import logging
 
 from .hackernewsapi import query_recent_story_ids, query_story
 
+def _log_story(action, story):
+    logging.info('{}: {} ({}/{}) - {}'.format(
+        action, story.id, story.score, len(story.comments), story.title))
+
 class Collector:
     def __init__(self, repository, api_wait):
         self._repository = repository
@@ -54,28 +58,39 @@ class Broker:
 
     async def run(self, sleep):
         while True:
-            await self._post_pending_stories()
+            await self._process_pending_stories()
             await asyncio.sleep(sleep)
 
-    async def _post_pending_stories(self):
+    async def _process_pending_stories(self):
         story_ids = self._repository.get_pending_stories(self._hold_time)
         for story_id in story_ids:
-            posted = await self._filter_and_post(await query_story(story_id))
-            self._mark_story_processed(story_id)
-            if posted:
+            if await self._process_story(story_id):
                 await asyncio.sleep(self._posting_wait)
 
-    async def _filter_and_post(self, story):
-        for filter_func in self._filters:
-            if not filter_func(story):
-                logging.info('drop {} ({}/{}) - {}'.format(
-                    story.id, story.score, len(story.comments), story.title
-                ))
-                return False
+    async def _process_story(self):
+        story = await query_story(story_id)
+        posted = await self._post_if_viable(story)
+        self._mark_story_processed(story_id)
+        if posted:
+            _log_story('post', story)
+        else:
+            _log_story('drop', story)
+
+    async def _post_if_viable(self, story):
+        if self._is_story_viable(story):
+            await self._post(story)
+            return True
+        return False
+
+    async def _post(self, story):
         for poster in self._posters:
             await poster.post(story)
+
+    def _is_story_viable(self, story):
+        for filter_func in self._filters:
+            if not filter_func(story):
+                return False
         return True
 
     def _mark_story_processed(self, story_id):
         self._repository.mark_story(story_id, processed=True)
-
