@@ -14,6 +14,8 @@ CLEANER_SLEEP = float(os.environ.get('CLEANER_SLEEP', 300))
 BROKER_SLEEP = float(os.environ.get('BROKER_SLEEP', 10))
 POSTING_WAIT = float(os.environ.get('POSTING_WAIT', 5))
 
+HACKERNEWS_API = os.environ.get('HACKERNEWS_API',
+                                'https://hacker-news.firebaseio.com/v0')
 HACKERNEWS_TIMEOUT = float(os.environ.get('HACKERNEWS_TIMEOUT', 5.0))
 MASTODON_TIMEOUT = float(os.environ.get('MASTODON_TIMEOUT', 10.0))
 
