@@ -1,7 +1,7 @@
 import json
 import requests
 
-from ..appenv import HACKERNEWS_API, HACKERNEWS_TIMEOUT
+from appenv import HACKERNEWS_API, HACKERNEWS_TIMEOUT
 from .asyncutil import do_async
 from .model import Story
 
