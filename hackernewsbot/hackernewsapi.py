@@ -19,8 +19,8 @@ class HackernewsAPI:
     async def item(self, item_id):
         return await self._query('/item/{}.json'.format(item_id))
 
-    async def newstories(self, item_id):
-        return await self._query('/newstories'.format(item_id))
+    async def newstories(self):
+        return await self._query('/newstories')
 
 # FIXME: Temporary global for backward-compatibility
 _HACKERNEWS_API = HackernewsAPI(HACKERNEWS_API, HACKERNEWS_TIMEOUT)
