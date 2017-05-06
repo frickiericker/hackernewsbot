@@ -26,10 +26,10 @@ class HackernewsAPI:
 _HACKERNEWS_API = HackernewsAPI(HACKERNEWS_API, HACKERNEWS_TIMEOUT)
 
 async def query_recent_story_ids():
-    return _HACKERNEWS_API.newstories()
+    return await _HACKERNEWS_API.newstories()
 
 async def query_story_metadata(story_id):
-    return _HACKERNEWS_API.item(story_id)
+    return await _HACKERNEWS_API.item(story_id)
 
 async def query_story(story_id):
     return Story(story_id, **await query_story_metadata(story_id))
