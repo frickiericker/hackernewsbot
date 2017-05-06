@@ -43,15 +43,24 @@ class Bot:
         self._set_poster()
 
     def _set_filter(self):
+        self._add_moderation_filter()
+        self._add_cooldown_filter()
+        self._add_score_filter()
+
+    def _add_moderation_filter(self):
         self._broker.add_filter(
             lambda story:
                 not (story.dead or story.deleted)
         )
+
+    def _add_cooldown_filter(self):
         self._broker.add_filter(
             lambda story:
                 (datetime.now(timezone.utc) - story.time)
                     .total_seconds() < STORY_COOLDOWN
         )
+
+    def _add_score_filter(self):
         self._broker.add_filter(
             lambda story:
                 len(story.comments) >= STORY_MINIMUM_COMMENTS and
