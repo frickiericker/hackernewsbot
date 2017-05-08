@@ -2,4 +2,4 @@
 
 https://mastodon.social/@clmhackernewsbot
 
-A bot that toots hackew news stories. Works on heroku.
+A bot that toots hacker news stories. Works on heroku.
